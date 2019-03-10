@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
 public @interface Export {
 	String header() default "";
 
+	Class<?> collectionType() default String.class;
 	String separator() default ",";
 }

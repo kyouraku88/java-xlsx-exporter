@@ -8,9 +8,21 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public abstract class IEUtils {
+
+	public static final Set<Class<?>> primNumbers = new HashSet<>();
+
+	static {
+		primNumbers.add(Integer.TYPE);
+		primNumbers.add(Double.TYPE);
+		primNumbers.add(Float.TYPE);
+		primNumbers.add(Short.TYPE);
+		primNumbers.add(Long.TYPE);
+	}
 
 	public static LocalDate convertToLocalDate(Date dateToConvert) {
 		if (dateToConvert == null) {
