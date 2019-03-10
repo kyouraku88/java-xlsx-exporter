@@ -9,6 +9,10 @@ import java.util.List;
 
 import org.junit.Test;
 
+import hu.bsido.common.Export;
+import hu.bsido.common.Exportable;
+import hu.bsido.common.IEUtils;
+
 public class ExportTest {
 	
 	public enum TestEnum {
@@ -17,7 +21,7 @@ public class ExportTest {
 	
 	@Exportable(sheet = "Exportable")
 	private static class ExportableModel {
-		@Export
+		@Export(header = "intExport")
 		private int exportValue;
 		@SuppressWarnings("unused")
 		private int dontExport;
@@ -43,7 +47,7 @@ public class ExportTest {
 	@Test
 	public void testField() throws NoSuchFieldException, SecurityException {
 		Class<ExportableModel> cem = ExportableModel.class;
-		List<Field> fields = ExportUtils.getExportableFields(cem);
+		List<Field> fields = IEUtils.getExportableFields(cem);
 		Field exportedField = cem.getDeclaredField("exportValue");
 		assertEquals(exportedField, fields.get(0));
 	}
@@ -51,30 +55,30 @@ public class ExportTest {
 	@Test
 	public void testSheetFromValue() {
 		Class<ExportableModel> cem = ExportableModel.class;
-		String sheetName = ExportUtils.getSheetName(cem);
+		String sheetName = IEUtils.getSheetName(cem);
 		assertEquals("Exportable", sheetName);
 	}
 	
 	@Test
 	public void testSheetFromClass() {
 		Class<ExportableModel2> cem = ExportableModel2.class;
-		String sheetName = ExportUtils.getSheetName(cem);
+		String sheetName = IEUtils.getSheetName(cem);
 		assertEquals("ExportableModel2", sheetName);
 	}
-	
+
 	@Test
 	public void testExportToXlsx() {
 		List<ExportableModel> list = new ArrayList<>();
 		list.add(new ExportableModel(5, 10));
-		Exporter.toXlsx(list, ExportableModel.class, new File("test.xlsx"));
+		ExportBuilder.create().addSheet(ExportableModel.class, list).export(new File("test.xlsx"));
 	}
-	
+
 	@Test
 	public void testExportable() {
 		Class<ExportableModel> cex = ExportableModel.class;
-		assertEquals(true, ExportUtils.isExportable(cex));
+		assertEquals(true, IEUtils.isExportable(cex));
 		
 		Class<NotExporttable> cnotex = NotExporttable.class;
-		assertEquals(false, ExportUtils.isExportable(cnotex));
+		assertEquals(false, IEUtils.isExportable(cnotex));
 	}
 }
